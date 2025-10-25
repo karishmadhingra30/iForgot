@@ -19,7 +19,6 @@ CREATE TABLE notes (
   content TEXT NOT NULL,
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   themes TEXT[] DEFAULT '{}',
-  sentiment TEXT CHECK (sentiment IN ('positive', 'negative', 'neutral')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
