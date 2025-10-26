@@ -103,7 +103,7 @@ export default function Page() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [userId] = useState("demo-user-id"); // TODO: Replace with actual auth
+  const [userId] = useState("00000000-0000-0000-0000-000000000001"); // Demo UUID for MVP (bypasses auth)
 
   const activeNote = notes.find((n) => n.id === activeNoteId);
 
