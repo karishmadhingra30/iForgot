@@ -16,7 +16,6 @@ Note: "${noteContent}"
 Analyze and return JSON:
 {
   "themes": ["theme1", "theme2"],
-  "sentiment": "positive/negative/neutral",
   "action_items": ["task1", "task2"],
   "category": {
     "action": "assign" or "create",

@@ -16,7 +16,6 @@ export async function createNote(
         user_id: userId,
         content,
         themes: aiResult.themes,
-        sentiment: aiResult.sentiment,
       })
       .select()
       .single()
@@ -156,7 +155,6 @@ export async function fetchUserNotes(
   userId: string,
   options?: {
     categoryId?: string
-    sentiment?: 'positive' | 'negative' | 'neutral'
     limit?: number
   }
 ): Promise<{ success: boolean; notes?: Note[]; error?: string }> {
@@ -173,10 +171,6 @@ export async function fetchUserNotes(
 
     if (options?.categoryId) {
       query = query.eq('category_id', options.categoryId)
-    }
-
-    if (options?.sentiment) {
-      query = query.eq('sentiment', options.sentiment)
     }
 
     if (options?.limit) {

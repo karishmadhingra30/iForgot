@@ -20,7 +20,6 @@ export interface Note {
   category_id: string | null;
   category?: Category;
   themes: string[];
-  sentiment: 'positive' | 'negative' | 'neutral' | null;
   created_at: string;
   updated_at: string;
   tasks?: Task[];
@@ -38,7 +37,6 @@ export interface Task {
 // AI Processing types
 export interface AIProcessingResult {
   themes: string[];
-  sentiment: 'positive' | 'negative' | 'neutral';
   action_items: string[];
   category: {
     action: 'assign' | 'create';
