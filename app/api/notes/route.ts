@@ -5,8 +5,48 @@ import {
   createActionItems,
   fetchUserCategories,
   handleCategoryAssignment,
+  fetchUserNotes,
 } from '@/lib/notes'
 import { AIProcessingResult } from '@/types'
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userId')
+    const categoryId = searchParams.get('categoryId')
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Missing userId' },
+        { status: 400 }
+      )
+    }
+
+    const options = categoryId ? { categoryId } : undefined
+    const result = await fetchUserNotes(userId, options)
+
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      notes: result.notes || [],
+    })
+  } catch (error) {
+    console.error('Error fetching notes:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
