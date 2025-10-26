@@ -45,7 +45,7 @@ CREATE INDEX idx_tasks_note_id ON tasks(note_id);
 CREATE INDEX idx_notes_content_search ON notes USING gin(to_tsvector('english', content));
 
 -- Row Level Security (RLS) Policies
--- Temporarily disabled for demo purposes (using demo-user-id without authentication)
+-- Temporarily disabled for MVP demo purposes (using dummy UUID without authentication)
 -- ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
