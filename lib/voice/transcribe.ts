@@ -2,16 +2,16 @@
 // Supports both Deepgram and OpenAI Whisper
 
 export async function transcribeAudio(audioBlob: Blob): Promise<string> {
-  // Check which API key is available
-  const deepgramKey = process.env.DEEPGRAM_API_KEY
+  // Check which API key is available - prioritize OpenAI
   const openaiKey = process.env.OPENAI_API_KEY
+  const deepgramKey = process.env.DEEPGRAM_API_KEY
 
-  if (deepgramKey) {
-    return transcribeWithDeepgram(audioBlob, deepgramKey)
-  } else if (openaiKey) {
+  if (openaiKey) {
     return transcribeWithWhisper(audioBlob, openaiKey)
+  } else if (deepgramKey) {
+    return transcribeWithDeepgram(audioBlob, deepgramKey)
   } else {
-    throw new Error('No transcription API key configured')
+    throw new Error('No transcription API key configured. Please set OPENAI_API_KEY or DEEPGRAM_API_KEY')
   }
 }
 
