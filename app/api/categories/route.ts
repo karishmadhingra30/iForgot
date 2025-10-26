@@ -1,5 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAndAssignCategory } from '@/lib/notes'
+import { createAndAssignCategory, fetchUserCategories } from '@/lib/notes'
+
+/**
+ * GET: Fetch all categories for a user
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userId')
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Missing userId' },
+        { status: 400 }
+      )
+    }
+
+    const categories = await fetchUserCategories(userId)
+
+    return NextResponse.json({
+      success: true,
+      categories,
+    })
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}
 
 /**
  * POST: Create a new category and optionally assign it to a note
