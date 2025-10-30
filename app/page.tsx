@@ -10,6 +10,7 @@ import {
   ImagePlus,
   Share2,
   Save,
+  TestTube2,
 } from "lucide-react";
 import TipTapEditor from "@/components/TipTapEditor";
 import { Note, Category } from "@/types";
@@ -204,6 +205,11 @@ export default function Page() {
           <div className="px-2 space-y-1">
             <SidebarItem icon={Plus} label="New note" onClick={createNewNote} />
             <SidebarItem icon={Search} label="Search notes" />
+            <SidebarItem
+              icon={TestTube2}
+              label="Basic Test (Supabase)"
+              onClick={() => window.location.href = '/basic-test'}
+            />
           </div>
 
           {/* Categories Section */}

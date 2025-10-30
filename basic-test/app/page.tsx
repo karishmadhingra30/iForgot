@@ -76,6 +76,15 @@ export default function BasicTestPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
+        <div className="mb-4">
+          <button
+            onClick={() => window.location.href = '/'}
+            className="text-blue-600 hover:text-blue-800 flex items-center gap-2"
+          >
+            ← Back to Main App
+          </button>
+        </div>
+
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h1 className="text-3xl font-bold mb-6 text-gray-900">
             Basic Note Test - Supabase Integration
