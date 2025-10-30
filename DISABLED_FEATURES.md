@@ -1,4 +1,25 @@
-# Temporarily Disabled Features
+# ⚠️ Temporarily Disabled Features ⚠️
+
+---
+
+## 🚨 ATTENTION: FOR ALL CLAUDE SESSIONS 🚨
+
+**READ THIS BEFORE MAKING ANY CHANGES TO THIS CODEBASE**
+
+### AI Features Are INTENTIONALLY DISABLED
+
+This is **NOT** a bug or mistake. This is a **deliberate decision** to stabilize core functionality first.
+
+**DO NOT:**
+- ❌ Re-enable AI features without explicit user request
+- ❌ Rename `client.DISABLED.ts` to `client.ts`
+- ❌ Uncomment AI code in route handlers
+- ❌ Try to "fix" disabled features
+- ❌ Integrate AI-powered functionality
+
+**If you're unsure, see README_FIRST.md**
+
+---
 
 **Status:** AI features are currently DISABLED to focus on core note-taking functionality.
 
@@ -84,14 +105,54 @@ When ready to re-enable AI features, follow this order:
 - [ ] Save note with tasks → Should extract action items
 - [ ] All above work together seamlessly
 
-## Notes for Future Claude Sessions
+## 📋 Notes for Future Claude Sessions
 
-**IMPORTANT:** If you're a new Claude session working on this codebase:
-- AI features are INTENTIONALLY disabled - this is not a bug
-- Focus on core note save/load functionality first
-- Only re-enable AI features when explicitly asked by the user
-- File naming: `.DISABLED.ts` suffix means "do not import or use"
-- Check this file first to understand current feature state
+### ⚠️ MANDATORY READING FOR ALL NEW CLAUDE SESSIONS ⚠️
+
+**If you are starting work on this codebase, read this carefully:**
+
+1. **AI features are INTENTIONALLY disabled** - This is not a bug, error, or oversight
+2. **Do NOT attempt to re-enable them** - Unless the user explicitly asks you to
+3. **Do NOT rename `.DISABLED.ts` files** - The extension is intentional
+4. **Do NOT uncomment AI code** - It's commented out for a reason
+5. **Focus on core functionality** - Save, load, display notes without AI
+6. **Read README_FIRST.md** - It has the full context
+
+### How to Identify Disabled Features
+
+- Files ending in `.DISABLED.ts` (e.g., `lib/claude/client.DISABLED.ts`)
+- Files with `⚠️` warning headers (search for this emoji in source files)
+- Large commented blocks in `app/api/notes/route.ts` (lines 110-166)
+- Functions that exist but are never called (like `handleCategoryAssignment`)
+
+### Your Job as a Claude Session
+
+**Primary focus:**
+- Fix bugs in core note functionality
+- Improve save/load reliability
+- Enhance user experience for basic features
+- Work on database operations, UI, error handling
+
+**DO NOT work on:**
+- AI theme extraction
+- Automatic categorization
+- Action item detection
+- Anything requiring Claude API calls
+
+### Quick Verification Command
+
+Run this to see all disabled markers:
+```bash
+grep -r "DISABLED\|⚠️" --include="*.ts" --include="*.tsx" --include="*.md" . | grep -v node_modules
+```
+
+### If You're Unsure
+
+**Ask yourself:** "Did the user explicitly request AI functionality?"
+- **No** → Don't enable it
+- **Yes** → Follow the re-enabling guide below
+
+**When in doubt, ask the user for clarification.**
 
 ## Current Implementation
 

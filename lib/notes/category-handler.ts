@@ -1,3 +1,17 @@
+// ============================================================================
+// ⚠️  AI-POWERED CATEGORY ASSIGNMENT IS TEMPORARILY DISABLED ⚠️
+// ============================================================================
+// Functions in this file depend on AI processing and are not currently called:
+// - handleCategoryAssignment() - Auto-assigns categories based on AI confidence
+// - createAndAssignCategory() - Works but not integrated in current flow
+//
+// Manual category operations (fetchUserCategories) still work normally.
+// See DISABLED_FEATURES.md for details on re-enabling AI category features.
+//
+// FOR CLAUDE SESSIONS: Do NOT call handleCategoryAssignment() or integrate
+// AI-powered category logic unless explicitly requested by the user.
+// ============================================================================
+
 import { supabase } from '@/lib/supabase/client'
 import { AIProcessingResult, Category } from '@/types'
 
