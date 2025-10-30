@@ -76,6 +76,17 @@ export async function createAndAssignCategory(
       .single()
 
     if (categoryError || !newCategory) {
+      // Check if it's a foreign key constraint error
+      const isForeignKeyError = categoryError?.message?.includes('foreign key constraint') ||
+                                 categoryError?.message?.includes('categories_user_id_fkey')
+
+      if (isForeignKeyError) {
+        return {
+          success: false,
+          error: '⚠️ Database setup incomplete: Test user not found. Please run database/test-user-setup.sql in your Supabase SQL Editor. See database/README.md for instructions.',
+        }
+      }
+
       return {
         success: false,
         error: categoryError?.message || 'Failed to create category',

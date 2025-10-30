@@ -21,6 +21,17 @@ export async function createNote(
       .single()
 
     if (error || !newNote) {
+      // Check if it's a foreign key constraint error
+      const isForeignKeyError = error?.message?.includes('foreign key constraint') ||
+                                 error?.message?.includes('notes_user_id_fkey')
+
+      if (isForeignKeyError) {
+        return {
+          success: false,
+          error: '⚠️ Database setup incomplete: Test user not found. Please run database/test-user-setup.sql in your Supabase SQL Editor. See database/README.md for instructions.',
+        }
+      }
+
       return {
         success: false,
         error: error?.message || 'Failed to create note',
@@ -94,6 +105,17 @@ export async function createActionItems(
       .select()
 
     if (error) {
+      // Check if it's a foreign key constraint error
+      const isForeignKeyError = error.message?.includes('foreign key constraint') ||
+                                 error.message?.includes('tasks_user_id_fkey')
+
+      if (isForeignKeyError) {
+        return {
+          success: false,
+          error: '⚠️ Database setup incomplete: Test user not found. Please run database/test-user-setup.sql in your Supabase SQL Editor. See database/README.md for instructions.',
+        }
+      }
+
       return {
         success: false,
         error: error.message,
