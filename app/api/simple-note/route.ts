@@ -66,6 +66,21 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase error:', error)
+
+      // Check if it's a foreign key constraint error
+      const isForeignKeyError = error.message?.includes('foreign key constraint') ||
+                                 error.message?.includes('notes_user_id_fkey')
+
+      if (isForeignKeyError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: '⚠️ Database setup incomplete: Test user not found. Please run database/test-user-setup.sql in your Supabase SQL Editor. See database/README.md for instructions.',
+          },
+          { status: 500 }
+        )
+      }
+
       return NextResponse.json(
         { success: false, error: error.message },
         { status: 500 }

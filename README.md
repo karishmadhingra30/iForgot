@@ -24,6 +24,8 @@ An AI-powered note-taking app designed specifically for ADHD users, featuring vo
 
 ## Quick Start
 
+> **📖 For detailed setup instructions and troubleshooting, see [SETUP_GUIDE.md](./SETUP_GUIDE.md)**
+
 1. **Install dependencies**:
    ```bash
    npm install
@@ -37,8 +39,12 @@ An AI-powered note-taking app designed specifically for ADHD users, featuring vo
 
 3. **Set up Supabase**:
    - Create a new Supabase project
+   - Go to Supabase Dashboard → SQL Editor
    - Run the SQL schema from `database/schema.sql`
+   - **IMPORTANT**: Run the test user setup from `database/test-user-setup.sql` (required for local development)
    - Copy your Supabase URL and anon key to `.env.local`
+
+   > ⚠️ **Without running test-user-setup.sql**, the save functionality will fail with a foreign key constraint error. See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for details.
 
 4. **Run development server**:
    ```bash

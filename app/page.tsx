@@ -103,6 +103,7 @@ export default function Page() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [userId] = useState("00000000-0000-0000-0000-000000000001"); // Demo UUID for MVP (bypasses auth)
 
   const activeNote = notes.find((n) => n.id === activeNoteId);
@@ -159,6 +160,7 @@ export default function Page() {
     }
 
     setIsSaving(true);
+    setSaveError(null);
     try {
       const response = await fetch("/api/notes", {
         method: "POST",
@@ -174,9 +176,12 @@ export default function Page() {
         await fetchNotes();
         await fetchCategories();
         setActiveNoteId(data.note.id);
+      } else {
+        setSaveError(data.error || "Failed to save note");
       }
     } catch (error) {
       console.error("Error saving note:", error);
+      setSaveError(error instanceof Error ? error.message : "Failed to save note");
     } finally {
       setIsSaving(false);
     }
@@ -307,6 +312,14 @@ export default function Page() {
               )}
             </div>
           </div>
+
+          {/* Error message */}
+          {saveError && (
+            <div className="mx-6 mt-3 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+              <div className="font-semibold mb-1">Failed to save note</div>
+              <div className="whitespace-pre-wrap">{saveError}</div>
+            </div>
+          )}
 
           {/* Editor */}
           <div className="flex-1 overflow-hidden">
