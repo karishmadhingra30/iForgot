@@ -1,3 +1,17 @@
+// ============================================================================
+// ⚠️  AI FEATURES IN THIS FILE ARE TEMPORARILY DISABLED ⚠️
+// ============================================================================
+// Functions in this file that depend on AI processing are not currently called:
+// - createNote() - Requires AIProcessingResult (not used in current flow)
+// - createActionItems() - Requires AI to extract action items (not called)
+//
+// These functions are defined but INACTIVE in the current implementation.
+// See DISABLED_FEATURES.md for details on re-enabling.
+//
+// FOR CLAUDE SESSIONS: These functions exist for future use. Do NOT call them
+// or integrate them unless explicitly requested by the user.
+// ============================================================================
+
 import { supabase } from '@/lib/supabase/client'
 import { Note, Task, AIProcessingResult } from '@/types'
 

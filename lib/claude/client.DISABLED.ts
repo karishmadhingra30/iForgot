@@ -1,3 +1,17 @@
+// ============================================================================
+// ⚠️  THIS FILE IS INTENTIONALLY DISABLED - DO NOT USE ⚠️
+// ============================================================================
+// This file has been renamed with .DISABLED.ts extension to prevent imports.
+// AI features are temporarily disabled while we stabilize core note functionality.
+//
+// STATUS: DISABLED
+// REASON: Focusing on core save/load functionality first
+// RE-ENABLE: See DISABLED_FEATURES.md for step-by-step instructions
+//
+// FOR CLAUDE SESSIONS: Do NOT rename or enable this file unless explicitly
+// requested by the user. This is an intentional architectural decision.
+// ============================================================================
+
 import Anthropic from '@anthropic-ai/sdk'
 import { AIProcessingResult } from '@/types'
 
