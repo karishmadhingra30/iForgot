@@ -164,13 +164,24 @@ export default function Page() {
     setIsSaving(true);
     setSaveError(null);
     try {
+      // Check if we're updating an existing note or creating a new one
+      const isUpdating = activeNoteId !== null;
+      const method = isUpdating ? "PUT" : "POST";
+      const body = isUpdating
+        ? JSON.stringify({
+            noteId: activeNoteId,
+            noteContent: editorContent,
+            userId,
+          })
+        : JSON.stringify({
+            noteContent: editorContent,
+            userId,
+          });
+
       const response = await fetch("/api/notes", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          noteContent: editorContent,
-          userId,
-        }),
+        body,
       });
 
       const data = await response.json();

@@ -175,3 +175,50 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { noteId, noteContent, userId } = await request.json()
+
+    if (!noteId || !noteContent || !userId) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // Update the existing note
+    const { data: updatedNote, error } = await supabase
+      .from('notes')
+      .update({
+        content: noteContent,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', noteId)
+      .eq('user_id', userId) // Ensure user owns the note
+      .select()
+      .single()
+
+    if (error || !updatedNote) {
+      return NextResponse.json(
+        { success: false, error: error?.message || 'Failed to update note' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      note: updatedNote,
+      message: 'Note updated successfully',
+    })
+  } catch (error) {
+    console.error('Error updating note:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}
