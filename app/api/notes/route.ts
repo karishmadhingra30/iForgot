@@ -63,11 +63,14 @@ export async function POST(request: NextRequest) {
     const categories = await fetchUserCategories(userId)
     const categoryNames = categories.map((c) => c.name)
 
-    // 2. Process note with Claude API
+    // 2. Process note with Claude API (with graceful degradation)
     const aiResult: AIProcessingResult = await processNoteWithClaude(
       noteContent,
       categoryNames
     )
+
+    // Check if AI processing was skipped (no API key)
+    const aiProcessingSkipped = aiResult.category.confidence === 0
 
     // 3. Save note with metadata
     const { success: noteSuccess, note: newNote, error: noteError } =
@@ -80,13 +83,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 4. Handle category assignment/creation
-    const categoryResult = await handleCategoryAssignment(
-      newNote.id,
-      userId,
-      aiResult.category,
-      categories
-    )
+    // 4. Handle category assignment/creation (only if AI processing succeeded)
+    let categoryResult = {
+      categoryId: null,
+      autoAssigned: false,
+      requiresConfirmation: false,
+      suggestedAction: 'none' as const,
+    }
+
+    if (!aiProcessingSkipped) {
+      categoryResult = await handleCategoryAssignment(
+        newNote.id,
+        userId,
+        aiResult.category,
+        categories
+      )
+    }
 
     // 5. Save action items if any
     if (aiResult.action_items && aiResult.action_items.length > 0) {
@@ -103,6 +115,10 @@ export async function POST(request: NextRequest) {
       success: true,
       note: newNote,
       analysis: aiResult,
+      aiProcessingSkipped,
+      warning: aiProcessingSkipped
+        ? 'Note saved without AI processing. Configure ANTHROPIC_API_KEY to enable automatic categorization and theme extraction.'
+        : undefined,
       category: {
         autoAssigned: categoryResult.autoAssigned,
         requiresConfirmation: categoryResult.requiresConfirmation,

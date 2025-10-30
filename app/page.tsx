@@ -104,6 +104,7 @@ export default function Page() {
   const [editorContent, setEditorContent] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const [userId] = useState("00000000-0000-0000-0000-000000000001"); // Demo UUID for MVP (bypasses auth)
 
   const activeNote = notes.find((n) => n.id === activeNoteId);
@@ -161,6 +162,7 @@ export default function Page() {
 
     setIsSaving(true);
     setSaveError(null);
+    setSaveWarning(null);
     try {
       const response = await fetch("/api/notes", {
         method: "POST",
@@ -176,6 +178,10 @@ export default function Page() {
         await fetchNotes();
         await fetchCategories();
         setActiveNoteId(data.note.id);
+        // Show warning if AI processing was skipped
+        if (data.warning) {
+          setSaveWarning(data.warning);
+        }
       } else {
         setSaveError(data.error || "Failed to save note");
       }
@@ -318,6 +324,14 @@ export default function Page() {
             <div className="mx-6 mt-3 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
               <div className="font-semibold mb-1">Failed to save note</div>
               <div className="whitespace-pre-wrap">{saveError}</div>
+            </div>
+          )}
+
+          {/* Warning message */}
+          {saveWarning && (
+            <div className="mx-6 mt-3 p-4 bg-yellow-900/20 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm">
+              <div className="font-semibold mb-1">Note saved (AI features disabled)</div>
+              <div className="whitespace-pre-wrap">{saveWarning}</div>
             </div>
           )}
 
