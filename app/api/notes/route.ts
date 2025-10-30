@@ -8,6 +8,7 @@ import {
   fetchUserCategories,
   handleCategoryAssignment,
   fetchUserNotes,
+  deleteNote,
 } from '@/lib/notes'
 import { AIProcessingResult } from '@/types'
 
@@ -213,6 +214,44 @@ export async function PUT(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error updating note:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const noteId = searchParams.get('noteId')
+    const userId = searchParams.get('userId')
+
+    if (!noteId || !userId) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required parameters' },
+        { status: 400 }
+      )
+    }
+
+    const result = await deleteNote(noteId, userId)
+
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Note deleted successfully',
+    })
+  } catch (error) {
+    console.error('Error deleting note:', error)
     return NextResponse.json(
       {
         success: false,

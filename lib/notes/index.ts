@@ -5,6 +5,7 @@ export {
   createActionItems,
   fetchNote,
   fetchUserNotes,
+  deleteNote,
 } from './operations'
 
 // Category handling

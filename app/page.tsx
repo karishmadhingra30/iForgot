@@ -200,6 +200,41 @@ export default function Page() {
     }
   };
 
+  const deleteNote = async () => {
+    if (!activeNoteId) {
+      return;
+    }
+
+    if (!confirm("Are you sure you want to delete this note?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/notes?noteId=${activeNoteId}&userId=${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        // Clear the active note and editor
+        setActiveNoteId(null);
+        setEditorContent("");
+        // Refresh the notes list
+        await fetchNotes();
+      } else {
+        setSaveError(data.error || "Failed to delete note");
+      }
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      setSaveError(
+        error instanceof Error ? error.message : "Failed to delete note"
+      );
+    }
+  };
+
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategoryId(
       selectedCategoryId === categoryId ? null : categoryId
@@ -317,6 +352,7 @@ export default function Page() {
               </button>
               {activeNote && (
                 <button
+                  onClick={deleteNote}
                   className="ml-2 inline-flex size-7 items-center justify-center rounded-md bg-neutral-800/70 hover:bg-neutral-700"
                   title="Delete note"
                 >
