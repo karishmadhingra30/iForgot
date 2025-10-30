@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { processNoteWithClaude } from '@/lib/claude/client'
+import { supabase } from '@/lib/supabase/client'
+// AI PROCESSING TEMPORARILY DISABLED - See DISABLED_FEATURES.md
+// import { processNoteWithClaude } from '@/lib/claude/client'
 import {
   createNote,
   createActionItems,
@@ -59,18 +61,65 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // =============================================================================
+    // AI PROCESSING DISABLED - See DISABLED_FEATURES.md
+    // =============================================================================
+    // When re-enabling AI features, uncomment the sections below and follow
+    // the step-by-step guide in DISABLED_FEATURES.md
+    // =============================================================================
+
+    // For now, create a simple note without AI processing (like simple-note API)
+    const { data: newNote, error } = await supabase
+      .from('notes')
+      .insert({
+        user_id: userId,
+        content: noteContent,
+        themes: [], // Empty themes since AI is disabled
+      })
+      .select()
+      .single()
+
+    if (error || !newNote) {
+      // Check if it's a foreign key constraint error
+      const isForeignKeyError = error?.message?.includes('foreign key constraint') ||
+                                 error?.message?.includes('notes_user_id_fkey')
+
+      if (isForeignKeyError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: '⚠️ Database setup incomplete: Test user not found. Please run database/test-user-setup.sql in your Supabase SQL Editor. See database/README.md for instructions.',
+          },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json(
+        { success: false, error: error?.message || 'Failed to create note' },
+        { status: 500 }
+      )
+    }
+
+    // Return simple success response
+    return NextResponse.json({
+      success: true,
+      note: newNote,
+      message: 'Note saved successfully (AI features disabled)',
+    })
+
+    // =============================================================================
+    // DISABLED CODE - Will re-enable in Phase 2
+    // =============================================================================
+    /*
     // 1. Fetch existing categories for the user
     const categories = await fetchUserCategories(userId)
     const categoryNames = categories.map((c) => c.name)
 
-    // 2. Process note with Claude API (with graceful degradation)
+    // 2. Process note with Claude API
     const aiResult: AIProcessingResult = await processNoteWithClaude(
       noteContent,
       categoryNames
     )
-
-    // Check if AI processing was skipped (no API key)
-    const aiProcessingSkipped = aiResult.category.confidence === 0
 
     // 3. Save note with metadata
     const { success: noteSuccess, note: newNote, error: noteError } =
@@ -83,22 +132,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 4. Handle category assignment/creation (only if AI processing succeeded)
-    let categoryResult = {
-      categoryId: null,
-      autoAssigned: false,
-      requiresConfirmation: false,
-      suggestedAction: 'none' as const,
-    }
-
-    if (!aiProcessingSkipped) {
-      categoryResult = await handleCategoryAssignment(
-        newNote.id,
-        userId,
-        aiResult.category,
-        categories
-      )
-    }
+    // 4. Handle category assignment/creation
+    const categoryResult = await handleCategoryAssignment(
+      newNote.id,
+      userId,
+      aiResult.category,
+      categories
+    )
 
     // 5. Save action items if any
     if (aiResult.action_items && aiResult.action_items.length > 0) {
@@ -107,7 +147,6 @@ export async function POST(request: NextRequest) {
 
       if (!tasksSuccess) {
         console.error('Error creating tasks:', tasksError)
-        // Don't fail the whole request if tasks fail
       }
     }
 
@@ -115,10 +154,6 @@ export async function POST(request: NextRequest) {
       success: true,
       note: newNote,
       analysis: aiResult,
-      aiProcessingSkipped,
-      warning: aiProcessingSkipped
-        ? 'Note saved without AI processing. Configure ANTHROPIC_API_KEY to enable automatic categorization and theme extraction.'
-        : undefined,
       category: {
         autoAssigned: categoryResult.autoAssigned,
         requiresConfirmation: categoryResult.requiresConfirmation,
@@ -127,6 +162,8 @@ export async function POST(request: NextRequest) {
         confidence: aiResult.category.confidence,
       },
     })
+    */
+    // =============================================================================
   } catch (error) {
     console.error('Error processing note:', error)
     return NextResponse.json(
