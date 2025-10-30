@@ -12,15 +12,16 @@ This is a back-to-basics test for the iForgot application. It focuses on the cor
 ## File Structure
 
 ```
-basic-test/
-├── app/
-│   ├── api/
-│   │   └── simple-note/
-│   │       └── route.ts          # API endpoint for saving/fetching notes
+app/
+├── basic-test/
 │   ├── page.tsx                   # Main UI page
 │   └── layout.tsx                 # Basic layout wrapper
-└── README.md                      # This file
+└── api/
+    └── simple-note/
+        └── route.ts               # API endpoint for saving/fetching notes
 ```
+
+**Note:** This follows Next.js App Router conventions where routes are defined by folders inside the `app/` directory.
 
 ## API Routes
 
