@@ -233,3 +233,33 @@ export async function fetchUserNotes(
     }
   }
 }
+
+/**
+ * Delete a note and its associated tasks
+ */
+export async function deleteNote(
+  noteId: string,
+  userId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('notes')
+      .delete()
+      .eq('id', noteId)
+      .eq('user_id', userId) // Security: verify ownership
+
+    if (error) {
+      return {
+        success: false,
+        error: error.message,
+      }
+    }
+
+    return { success: true }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    }
+  }
+}

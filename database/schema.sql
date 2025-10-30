@@ -73,8 +73,8 @@ CREATE INDEX idx_notes_content_search ON notes USING gin(to_tsvector('english', 
 -- CREATE POLICY "Users can update own notes" ON notes
 --   FOR UPDATE USING (auth.uid() = user_id);
 
--- CREATE POLICY "Users can delete own notes" ON notes
---   FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own notes" ON notes
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Tasks policies
 -- CREATE POLICY "Users can view own tasks" ON tasks
